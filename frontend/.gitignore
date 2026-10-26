@@ -1,0 +1,9 @@
+# Next.js
+node_modules/
+.next/
+out/
+.env*.local
+.env
+!*.env.example
+npm-debug.log*
+.DS_Store

@@ -1,0 +1,154 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import { useAuth } from "@/lib/auth-context";
+import { GraduationCap, ArrowRight, Lock, Mail, AlertCircle } from "lucide-react";
+
+/** Only allow same-site relative redirects */
+function safeNext(next: string | null) {
+  return next && next.startsWith("/") && !next.startsWith("//") ? next : null;
+}
+
+export default function LoginPage() {
+  return (
+    <React.Suspense fallback={null}>
+      <LoginContent />
+    </React.Suspense>
+  );
+}
+
+function LoginContent() {
+  const router = useRouter();
+  const nextPath = safeNext(useSearchParams().get("next"));
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const user = await login(email, password);
+      if (nextPath) {
+        router.push(nextPath);
+      } else if (user.role === "ADMIN") {
+        router.push("/admin");
+      } else if (user.role === "INSTRUCTOR") {
+        router.push("/instructor/dashboard");
+      } else {
+        router.push("/student/dashboard");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Invalid email or password";
+      setError(msg);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <Navbar />
+
+      <div className="flex-1 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-aviation-offWhite relative">
+        <div className="w-full max-w-md space-y-6">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-xl bg-aviation-black text-aviation-yellow flex items-center justify-center mx-auto shadow-sm">
+              <GraduationCap className="w-6 h-6 text-aviation-yellow" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-aviation-black tracking-tight font-heading">
+              Skill Academy Portal Login
+            </h1>
+            <p className="text-xs text-slate-500">
+              Access your enrolled Logistics, Aviation &amp; Skill training classrooms, live streams, and 7-day recordings.
+            </p>
+          </div>
+
+          {/* Login Card */}
+          <Card padding="lg" variant="default" className="shadow-card">
+            {error && (
+              <div className="mb-5 p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-aviation-charcoal uppercase tracking-wider mb-1.5">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-aviation-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="student@example.com"
+                    className="w-full pl-10 pr-3.5 py-2.5 rounded-lg border border-aviation-border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-aviation-yellow focus:border-transparent transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-aviation-charcoal uppercase tracking-wider">
+                    Password
+                  </label>
+                  <Link href="/forgot-password" className="text-[11px] font-semibold text-aviation-yellowDeep hover:underline">
+                    Forgot password?
+                  </Link>
+                </div>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-aviation-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="w-full pl-10 pr-3.5 py-2.5 rounded-lg border border-aviation-border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-aviation-yellow focus:border-transparent transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  className="w-full"
+                  isLoading={isLoading}
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                >
+                  Sign In to Academy
+                </Button>
+              </div>
+            </form>
+
+            <div className="mt-6 pt-4 border-t border-aviation-border text-center text-xs text-aviation-muted">
+              Not enrolled yet?{" "}
+              <Link href="/courses" className="font-bold text-aviation-black hover:underline">
+                Choose a course &amp; enroll
+              </Link>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
+}

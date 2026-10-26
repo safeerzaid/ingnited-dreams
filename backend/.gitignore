@@ -1,0 +1,11 @@
+# Backend
+node_modules/
+dist/
+build/
+.env
+!*.env.example
+*.db
+*.db-journal
+dev.db
+*.log
+npm-debug.log*
