@@ -1,0 +1,8 @@
+node_modules
+.next
+.env
+.env.*
+!.env.example
+*.log
+page_fresh.html
+page_output.html

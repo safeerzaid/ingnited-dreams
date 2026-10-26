@@ -9,3 +9,6 @@ build/
 dev.db
 *.log
 npm-debug.log*
+
+.vercel
+.env*
