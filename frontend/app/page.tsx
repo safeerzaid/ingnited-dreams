@@ -41,7 +41,6 @@ import {
   FileSpreadsheet,
   Factory,
   Sprout,
-  Phone,
   Mail,
   MapPin,
   Facebook,
@@ -58,6 +57,93 @@ import {
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
+
+// Gold line-art sprig of a Christmas rose, used as side decoration in the memorial section
+function MemorialSprig({ className = "" }: { className?: string }) {
+  const petals = [0, 72, 144, 216, 288];
+  const stamens = Array.from({ length: 10 }, (_, i) => (i * Math.PI * 2) / 10);
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 200 300"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.1"
+      strokeLinecap="round"
+      className={className}
+    >
+      {/* Stem and side stem with bud */}
+      <path d="M100 298 C 94 245, 110 190, 100 128" />
+      <path d="M101 170 C 118 158, 132 140, 138 118" />
+      <ellipse cx="141" cy="108" rx="7" ry="11" transform="rotate(28 141 108)" />
+      {/* Leaves with midribs */}
+      <path d="M99 236 C 72 218, 48 224, 36 250 C 62 256, 84 250, 99 236 Z" />
+      <path d="M99 236 Q 68 242 36 250" />
+      <path d="M103 200 C 128 180, 152 184, 166 204 C 142 214, 120 214, 103 200 Z" />
+      <path d="M103 200 Q 134 200 166 204" />
+      {/* Five-petal flower */}
+      {petals.map((angle) => (
+        <ellipse key={angle} cx="100" cy="72" rx="20" ry="27" transform={`rotate(${angle} 100 100)`} />
+      ))}
+      <circle cx="100" cy="100" r="7" />
+      {stamens.map((a) => (
+        <circle
+          key={a}
+          cx={100 + Math.cos(a) * 13}
+          cy={100 + Math.sin(a) * 13}
+          r="1.4"
+          fill="currentColor"
+          stroke="none"
+        />
+      ))}
+    </svg>
+  );
+}
+
+function Sparkle({ className = "" }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12 2c.6 3.9 2.1 5.4 6 6-3.9.6-5.4 2.1-6 6-.6-3.9-2.1-5.4-6-6 3.9-.6 5.4-2.1 6-6Z" />
+    </svg>
+  );
+}
+
+// Leadership messages shown on the home page, in this order (Chairman first)
+const LEADERSHIP_MESSAGES = [
+  {
+    role: "Chairman",
+    name: "Febin Sunny",
+    initials: "FS",
+    seal: "✦ CHAIRMAN ✦ IGNITED DREAMS ✦",
+    photo: "/images/leadership/chairman-febin-sunny.jpg",
+    photoPosition: "50% 30%",
+    headline: "Transforming Your Dreams Into Reality.",
+    message: [
+      "At Ignited Dreams, we believe that every young person has the potential to achieve great things with the right skills and guidance.",
+      "Our motto is to empower youth through skill-based education and prepare them for a successful future.",
+      "We are committed to making quality skill education accessible and affordable to all aspiring learners.",
+      "We aim to nurture talent, inspire innovation, and encourage entrepreneurship to build a self-reliant generation.",
+      "At Ignited Dreams, we will help you transform your dreams into reality and make your dreams shine bright.",
+      "I wish all our students great success, confidence, and a bright future filled with endless opportunities!",
+    ],
+  },
+  {
+    role: "CEO",
+    name: "Justin Burnard Dias",
+    initials: "JBD",
+    seal: "✦ CEO ✦ IGNITED DREAMS ✦",
+    photo: "/images/leadership/ceo.jpg",
+    photoPosition: "50% 40%",
+    headline: "Education Is a Right, Not a Business.",
+    message: [
+      "At Ignited Dreams, we believe that quality education and skill development should be accessible to every young person at an affordable cost.",
+      "We believe education is a right, not merely a business for profit.",
+      "Our vision is to educate youth to empower our country by nurturing skilled professionals and future entrepreneurs.",
+      "Together, let us build a self-reliant generation and a stronger nation.",
+      "Wishing all our youth a bright future filled with knowledge, confidence, success, and endless opportunities!",
+    ],
+  },
+];
 
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1428,74 +1514,139 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. FOUNDER & LEADERSHIP SPOTLIGHT (White Background - Split Layout) */}
-      <section className="w-full bg-white py-20 sm:py-28 border-t border-[#e8f0ea]">
-        <div className="max-w-[1240px] mx-auto px-6 sm:px-10 lg:px-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            
-            {/* Left Photo Container */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative h-[420px] sm:h-[480px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=85"
-                  alt="Justin Burnard Dias - Project Coordinator"
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0e271d]/90 via-transparent to-transparent flex flex-col justify-end p-6">
-                  <span className="text-white font-extrabold text-xl tracking-tight">Justin Burnard Dias</span>
-                  <span className="text-[#F5C400] text-xs font-semibold uppercase tracking-[0.14em]">
-                    Founder &amp; Project Coordinator
-                  </span>
-                </div>
-              </div>
+      {/* 7. LEADERSHIP MESSAGES (White Background - two cards: Chairman left, CEO right) */}
+      <section className="w-full bg-white pt-16 sm:pt-20 pb-10 sm:pb-12 border-t border-[#e8f0ea]">
+        <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 space-y-3">
+            <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#0e271d]">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#F5C400] inline-block" />
+              Leadership Messages
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#0e271d] leading-[1.12] tracking-[-0.035em]">
+              A Word From Our Leadership
+            </h2>
+          </div>
 
-              {/* Rotating seal badge */}
-              <div className="absolute -bottom-6 -right-4 sm:-right-6 z-20 w-[84px] h-[84px] rounded-full bg-[#0e271d] border-4 border-white shadow-xl flex items-center justify-center">
-                <svg className="absolute w-full h-full animate-[spin_14s_linear_infinite]" viewBox="0 0 100 100">
-                  <path id="founderSealPath" d="M 50,50 m -34,0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0" fill="none" />
-                  <text fontSize="7" fontWeight="800" fill="#F5C400" letterSpacing="1.5">
-                    <textPath href="#founderSealPath" startOffset="0%">✦ FOUNDER ✦ IGNITED DREAMS ✦</textPath>
-                  </text>
-                </svg>
-                <span className="relative z-10 text-[#F5C400] font-black text-xs text-center leading-tight">JBD</span>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+            {LEADERSHIP_MESSAGES.map((leader) => (
+              <article
+                key={leader.role}
+                className="relative flex flex-col h-full overflow-hidden rounded-[28px] bg-[#f8faf8] border border-[#e3ece5] p-6 sm:p-8 transition-shadow duration-300 hover:shadow-[0_24px_60px_-24px_rgba(14,39,29,0.25)]"
+              >
+                {/* Gold accent bar */}
+                <span className="absolute top-0 left-10 right-10 h-1 rounded-b-full bg-gradient-to-r from-[#D9A900] via-[#F5C400] to-[#D9A900]" />
 
-            {/* Right Content */}
-            <div className="lg:col-span-7 space-y-6">
-              <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-[0.16em] text-[#0e271d]">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#F5C400] inline-block" />
-                Leadership &amp; Social Charter
-              </span>
-
-              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#0e271d] leading-[1.12] tracking-[-0.035em]">
-                Empowering Educated Youth, Transforming Villages.
-              </h2>
-
-              <div className="bg-[#f8faf8] border-l-4 border-[#F5C400] p-5 sm:p-6 rounded-r-xl">
-                <p className="text-[#0e271d] font-medium italic text-base sm:text-lg leading-[1.6]">
-                  &ldquo;Our mission is not commercial profit extraction. We train our youth at actual running cost so they can enter global logistics careers, while our non-profit co-operatives generate self-reliant rural economies.&rdquo;
-                </p>
-              </div>
-
-              <p className="text-slate-600 text-sm sm:text-base leading-[1.65] font-normal">
-                16 Years teaching Logistics &amp; Aviation Management • 4 Years designing corporate growth strategies • Direct Coordinator Support (Phone: +91 7012002405). Target: 2,000 trained cadets with surplus channeled directly into rural farmer collectives and micro-production units.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                <ArrowPillButton href="/about">
-                  Read Full Charter
-                </ArrowPillButton>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 border border-[#0e271d]/20 hover:border-[#0e271d] text-[#0e271d] font-bold text-xs sm:text-sm px-6 py-3.5 rounded-full transition-colors tracking-[-0.01em]"
+                {/* Large decorative quote mark */}
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 64 48"
+                  className="absolute top-6 right-6 w-12 sm:w-16 text-[#F5C400]/25"
+                  fill="currentColor"
                 >
-                  <Phone className="w-4 h-4 text-[#0e271d]" />
-                  <span>Direct Consultation</span>
-                </Link>
-              </div>
-            </div>
+                  <path d="M0 48V28.8C0 12.4 8.6 2.8 25.8 0l2.4 6.4C19.4 8.6 15 13.6 14.6 21.6H26V48H0Zm38 0V28.8C38 12.4 46.6 2.8 63.8 0l2.4 6.4C57.4 8.6 53 13.6 52.6 21.6H64V48H38Z" />
+                </svg>
 
+                {/* Header: portrait + name */}
+                <div className="flex items-center gap-5 sm:gap-6">
+                  <div className="relative shrink-0">
+                    <img
+                      src={leader.photo}
+                      alt={`${leader.name}, ${leader.role} of Ignited Dreams`}
+                      className="w-32 h-40 sm:w-40 sm:h-48 rounded-2xl object-cover ring-4 ring-white shadow-lg"
+                      style={{ objectPosition: leader.photoPosition }}
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="inline-block rounded-full bg-[#0e271d] px-3 py-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-[#F5C400]">
+                      {leader.role}
+                    </span>
+                    <h3 className="mt-3 text-xl sm:text-2xl font-extrabold text-[#0e271d] tracking-[-0.02em] leading-tight">
+                      {leader.name}
+                    </h3>
+                    <p className="text-sm text-slate-500 font-medium">Ignited Dreams</p>
+                  </div>
+                </div>
+
+                {/* Message */}
+                {/* Body as one flowing paragraph; the closing wish stays on its own line */}
+                <div className="mt-6 space-y-3 text-[15px] sm:text-base text-slate-700 leading-[1.65]">
+                  <p>{leader.message.slice(0, -1).join(" ")}</p>
+                  <p>{leader.message[leader.message.length - 1]}</p>
+                </div>
+
+                {/* Signature, pinned to the bottom so both cards line up */}
+                <div className="mt-auto pt-5">
+                  <div className="flex items-center gap-4 border-t border-[#e3ece5] pt-4">
+                    <span className="h-10 w-1 rounded-full bg-[#F5C400]" />
+                    <div className="leading-tight">
+                      <p className="text-sm italic text-slate-500">With best wishes,</p>
+                      <p className="mt-1 font-extrabold text-[#0e271d]">{leader.name}</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#0e271d]/60">
+                        {leader.role}, Ignited Dreams
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* IN MEMORIAM (quiet tribute after the leadership messages) */}
+      <section
+        className="relative w-full overflow-hidden border-t border-[#ece6d6] py-10 sm:py-12"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 70% at 50% 45%, #fffdf7 0%, #faf6ec 55%, #f4efe2 100%)",
+        }}
+      >
+        {/* Side decoration: gold line-art sprigs and sparkles (hidden on small screens) */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden md:block">
+          <MemorialSprig className="absolute left-[6%] lg:left-[12%] top-1/2 -translate-y-1/2 -rotate-12 w-40 lg:w-48 text-[#C9A227]/45" />
+          <MemorialSprig className="absolute right-[6%] lg:right-[12%] top-1/2 -translate-y-1/2 rotate-12 -scale-x-100 w-40 lg:w-48 text-[#C9A227]/45" />
+          <Sparkle className="absolute left-[24%] top-[22%] w-3 text-[#D9A900]/50" />
+          <Sparkle className="absolute left-[30%] bottom-[24%] w-2 text-[#D9A900]/40" />
+          <Sparkle className="absolute left-[4%] top-[18%] w-2.5 text-[#D9A900]/35" />
+          <Sparkle className="absolute right-[25%] top-[30%] w-2.5 text-[#D9A900]/45" />
+          <Sparkle className="absolute right-[30%] bottom-[20%] w-3 text-[#D9A900]/40" />
+          <Sparkle className="absolute right-[5%] bottom-[16%] w-2 text-[#D9A900]/35" />
+        </div>
+
+        <div className="relative max-w-[720px] mx-auto px-6 flex flex-col items-center text-center">
+          {/* Arch-framed flower with an offset gold outline */}
+          <div className="relative">
+            <span
+              aria-hidden="true"
+              className="absolute -inset-3 sm:-inset-4 rounded-t-[108px] sm:rounded-t-[128px] rounded-b-[30px] border border-[#D9A900]/45"
+            />
+            <img
+              src="/images/memorial/christa-rose.jpg"
+              alt="A white Christmas rose in bloom"
+              className="relative w-48 h-60 sm:w-56 sm:h-72 rounded-t-[96px] sm:rounded-t-[112px] rounded-b-[20px] object-cover shadow-[0_30px_60px_-28px_rgba(60,45,10,0.45)]"
+              style={{ objectPosition: "46% 40%" }}
+            />
+          </div>
+
+          <p
+            className="mt-8 sm:mt-9 text-lg sm:text-xl italic text-[#7a6f58] tracking-wide"
+            style={{ fontFamily: "var(--font-serif), Georgia, serif" }}
+          >
+            In memory of our beloved
+          </p>
+          <h2
+            className="mt-2 text-[40px] sm:text-[56px] leading-none font-medium text-[#0e271d]"
+            style={{ fontFamily: "var(--font-serif), Georgia, serif" }}
+          >
+            Christa Rose Dias
+          </h2>
+
+          <div className="mt-4 flex items-center gap-3 text-[#D9A900]" aria-hidden="true">
+            <span className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-[#D9A900]/70" />
+            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+              <path d="M12 2c.6 3.9 2.1 5.4 6 6-3.9.6-5.4 2.1-6 6-.6-3.9-2.1-5.4-6-6 3.9-.6 5.4-2.1 6-6Z" />
+            </svg>
+            <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-[#D9A900]/70" />
           </div>
         </div>
       </section>
