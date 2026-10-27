@@ -8,7 +8,7 @@ import CustomSelect from "@/components/ui/Select";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import api from "@/lib/api";
-import { formatInr, initials } from "@/lib/format";
+import { formatInr } from "@/lib/format";
 import type { PublicCourse } from "@/lib/types";
 
 if (typeof window !== "undefined") {
@@ -59,7 +59,6 @@ export default function CoursesPage() {
         const matchesSearch =
           course.title.toLowerCase().includes(q) ||
           course.description.toLowerCase().includes(q) ||
-          (course.facultyName || "").toLowerCase().includes(q) ||
           (course.category || "").toLowerCase().includes(q);
 
         const matchesCategory = selectedCategory === ALL_CATEGORIES || course.category === selectedCategory;
@@ -283,17 +282,12 @@ export default function CoursesPage() {
 
                 <div className="p-6 pt-0">
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-[#0e271d] text-[#F5C400] text-[11px] font-black flex items-center justify-center">
-                        {initials(course.facultyName || "ID")}
-                      </div>
-                      <div>
-                        <div className="text-xs font-semibold text-[#0A0A0A]">
-                          {course.facultyName || "Academy Faculty"}
-                        </div>
-                        <div className="text-[10px] text-gray-500">{course.facultyTitle}</div>
-                      </div>
-                    </div>
+                    <Link
+                      href={`/courses/${course.slug}`}
+                      className="text-xs font-semibold text-[#0A0A0A] hover:text-[#0e271d] hover:underline underline-offset-4"
+                    >
+                      View course details
+                    </Link>
 
                     <Link
                       href={`/courses/${course.slug}`}

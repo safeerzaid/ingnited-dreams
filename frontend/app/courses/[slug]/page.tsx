@@ -225,18 +225,6 @@ export default async function CourseDetailPage({ params }: PageProps) {
                   ))}
                 </div>
 
-                {/* Faculty Card - Clean Light Mode */}
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-full bg-[#F5C400] text-[#0e271d] font-black flex items-center justify-center text-sm shrink-0 shadow-xs border border-amber-300">
-                    ID
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-slate-900">{courseData.instructor.name}</div>
-                    <div className="text-[11px] font-semibold text-amber-800">{courseData.instructor.title}</div>
-                    <div className="text-[10px] text-slate-500">{courseData.instructor.experience}</div>
-                  </div>
-                </div>
-
                 {/* Direct Enrollment & Check-In Button */}
                 <div className="space-y-3">
                   {hasSeats ? (

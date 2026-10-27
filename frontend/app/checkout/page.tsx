@@ -9,7 +9,6 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import {
-  ShieldCheck,
   CheckCircle2,
   Clock,
   Users,
@@ -550,15 +549,6 @@ function CheckoutContent() {
                 <Users className="w-4 h-4 text-aviation-yellowDeep shrink-0" />
                 <span>
                   <strong>Batch:</strong> {selectedBatch.name} ({selectedBatch.capacity} students max)
-                </span>
-              </div>
-            )}
-            {course.facultyName && (
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-aviation-yellowDeep shrink-0" />
-                <span>
-                  <strong>Faculty:</strong> {course.facultyName}
-                  {course.facultyTitle ? ` — ${course.facultyTitle}` : ""}
                 </span>
               </div>
             )}
